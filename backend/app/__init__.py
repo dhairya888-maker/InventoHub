@@ -1,0 +1,1 @@
+"""InventoHub Backend Application Package."""

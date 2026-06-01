@@ -1,0 +1,26 @@
+databases:
+  - name: inventohub-db
+    plan: free
+    databaseName: inventohub
+    user: inventohub
+
+services:
+  - type: web
+    name: inventohub-api
+    runtime: docker
+    plan: free
+    rootDir: backend
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: inventohub-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
