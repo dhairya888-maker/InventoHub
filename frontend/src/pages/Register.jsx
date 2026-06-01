@@ -53,21 +53,21 @@ export default function Register() {
             <span className="mb-2 block text-sm font-bold" style={{ color: 'var(--text)' }}>Name</span>
             <span className="relative block">
               <User className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--soft)' }} />
-              <input className="field pl-11" value={form.name} onChange={(event) => update('name', event.target.value)} />
+              <input className="field field-with-left-icon" value={form.name} onChange={(event) => update('name', event.target.value)} />
             </span>
           </label>
           <label className="block">
             <span className="mb-2 block text-sm font-bold" style={{ color: 'var(--text)' }}>Email</span>
             <span className="relative block">
               <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--soft)' }} />
-              <input className="field pl-11" type="email" value={form.email} onChange={(event) => update('email', event.target.value)} />
+              <input className="field field-with-left-icon" type="email" value={form.email} onChange={(event) => update('email', event.target.value)} />
             </span>
           </label>
           <label className="block">
             <span className="mb-2 block text-sm font-bold" style={{ color: 'var(--text)' }}>Password</span>
             <span className="relative block">
               <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--soft)' }} />
-              <input className="field px-11" type={showPassword ? 'text' : 'password'} value={form.password} onChange={(event) => update('password', event.target.value)} />
+              <input className="field field-with-icons" type={showPassword ? 'text' : 'password'} value={form.password} onChange={(event) => update('password', event.target.value)} />
               <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 p-2" onClick={() => setShowPassword((value) => !value)}>
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>

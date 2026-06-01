@@ -297,6 +297,15 @@ button:disabled {
   transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
+.field-with-left-icon {
+  padding-left: 44px;
+}
+
+.field-with-icons {
+  padding-left: 44px;
+  padding-right: 44px;
+}
+
 .field:focus {
   border-color: color-mix(in srgb, var(--brand), white 18%);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand), transparent 84%);

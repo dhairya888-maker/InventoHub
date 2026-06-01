@@ -105,7 +105,7 @@ export default function Login() {
                 <span className="mb-2 block text-sm font-bold" style={{ color: 'var(--text)' }}>Email</span>
                 <span className="relative block">
                   <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--soft)' }} />
-                  <input className="field pl-11" value={email} onChange={(event) => setEmail(event.target.value)} />
+                  <input className="field field-with-left-icon" value={email} onChange={(event) => setEmail(event.target.value)} />
                 </span>
               </label>
               <label className="block">
@@ -113,7 +113,7 @@ export default function Login() {
                 <span className="relative block">
                   <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--soft)' }} />
                   <input
-                    className="field px-11"
+                    className="field field-with-icons"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
