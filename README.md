@@ -21,6 +21,28 @@ Email: admin@inventohub.com
 Password: Admin@123
 ```
 
+## Screenshots
+
+### Authentication
+
+![InventoHub login screen](screenshots/login.png)
+
+### Dashboard
+
+![InventoHub dashboard analytics](screenshots/dashboard.png)
+
+### Inventory Management
+
+![InventoHub inventory management](screenshots/inventory.png)
+
+### Customer Management
+
+![InventoHub customer management](screenshots/customer.png)
+
+### Order Management
+
+![InventoHub order management](screenshots/orders.png)
+
 ## Core Features
 
 - Premium SaaS dashboard with KPI cards, revenue trends, inventory health, low-stock alerts, and recent activity
