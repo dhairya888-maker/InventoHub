@@ -12,13 +12,13 @@ const DEMO_USER = {
 
 const DEMO_PASSWORD = 'Admin@123';
 
-function createDemoToken(email) {
+function createDemoToken(email, name = DEMO_USER.name, role = DEMO_USER.role) {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const payload = btoa(
     JSON.stringify({
       sub: email,
-      name: DEMO_USER.name,
-      role: DEMO_USER.role,
+      name: name,
+      role: role,
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 8,
     }),
@@ -34,36 +34,101 @@ export function AuthProvider({ children }) {
   });
 
   const login = async ({ email, password, remember = true }) => {
-    if (email !== DEMO_USER.email || password !== DEMO_PASSWORD) {
-      throw new Error('Use the demo credentials to access this preview workspace.');
+    if (email === DEMO_USER.email) {
+      if (password !== DEMO_PASSWORD) {
+        throw new Error('Invalid email or password.');
+      }
+
+      const nextToken = createDemoToken(email, DEMO_USER.name, DEMO_USER.role);
+      setToken(nextToken);
+      setUser(DEMO_USER);
+
+      const storage = remember ? localStorage : sessionStorage;
+      storage.setItem('inventohub_token', nextToken);
+      storage.setItem('inventohub_user', JSON.stringify(DEMO_USER));
+      if (!remember) {
+        localStorage.removeItem('inventohub_token');
+        localStorage.removeItem('inventohub_user');
+      }
+
+      return DEMO_USER;
     }
 
-    const nextToken = createDemoToken(email);
+    const registeredUsers = JSON.parse(localStorage.getItem('inventohub_registered_users') || '[]');
+    const matchedUser = registeredUsers.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+
+    if (!matchedUser) {
+      throw new Error('Use the demo credentials or a registered account to access this preview workspace.');
+    }
+
+    if (matchedUser.password !== password) {
+      throw new Error('Invalid email or password.');
+    }
+
+    const activeUser = {
+      name: matchedUser.name,
+      email: matchedUser.email,
+      role: matchedUser.role,
+      company: matchedUser.company,
+    };
+
+    const nextToken = createDemoToken(email, activeUser.name, activeUser.role);
     setToken(nextToken);
-    setUser(DEMO_USER);
+    setUser(activeUser);
 
     const storage = remember ? localStorage : sessionStorage;
     storage.setItem('inventohub_token', nextToken);
-    storage.setItem('inventohub_user', JSON.stringify(DEMO_USER));
+    storage.setItem('inventohub_user', JSON.stringify(activeUser));
     if (!remember) {
       localStorage.removeItem('inventohub_token');
       localStorage.removeItem('inventohub_user');
     }
 
-    return DEMO_USER;
+    return activeUser;
   };
 
   const register = async ({ name, email, password }) => {
     if (!name || !email || !password) {
       throw new Error('Complete every field to create a workspace.');
     }
-    const nextUser = { ...DEMO_USER, name, email, role: 'Workspace Owner' };
-    const nextToken = createDemoToken(email);
+
+    if (email.toLowerCase() === DEMO_USER.email.toLowerCase()) {
+      throw new Error('An account with this email already exists.');
+    }
+
+    const registeredUsers = JSON.parse(localStorage.getItem('inventohub_registered_users') || '[]');
+    if (registeredUsers.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
+      throw new Error('An account with this email already exists.');
+    }
+
+    const nextUser = {
+      name,
+      email,
+      password,
+      role: 'Workspace Owner',
+      company: 'InventoHub',
+    };
+
+    registeredUsers.push(nextUser);
+    localStorage.setItem('inventohub_registered_users', JSON.stringify(registeredUsers));
+
+    const activeUser = {
+      name: nextUser.name,
+      email: nextUser.email,
+      role: nextUser.role,
+      company: nextUser.company,
+    };
+
+    const nextToken = createDemoToken(email, activeUser.name, activeUser.role);
     setToken(nextToken);
-    setUser(nextUser);
+    setUser(activeUser);
+
     localStorage.setItem('inventohub_token', nextToken);
-    localStorage.setItem('inventohub_user', JSON.stringify(nextUser));
-    return nextUser;
+    localStorage.setItem('inventohub_user', JSON.stringify(activeUser));
+
+    return activeUser;
   };
 
   const logout = () => {

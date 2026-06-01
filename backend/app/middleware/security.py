@@ -25,7 +25,16 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # Referrer policy
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         # Content Security Policy
-        response.headers["Content-Security-Policy"] = "default-src 'self'"
+        path = request.url.path
+        if path in ("/docs", "/redoc", "/openapi.json"):
+            response.headers["Content-Security-Policy"] = (
+                "default-src 'self'; "
+                "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
+                "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
+                "img-src 'self' data: fastapi.tiangolo.com cdn.jsdelivr.net; "
+            )
+        else:
+            response.headers["Content-Security-Policy"] = "default-src 'self'"
         # Permissions Policy
         response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
 
